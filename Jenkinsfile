@@ -2,15 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
 
         stage('Build Docker Images') {
             steps {
                 bat 'docker compose build'
+            }
+        }
+
+        stage('Stop Existing Containers') {
+            steps {
+                bat 'docker compose down --remove-orphans'
             }
         }
 
@@ -31,6 +32,7 @@ pipeline {
         success {
             echo 'SwiftTrack CI/CD Pipeline completed successfully!'
         }
+
         failure {
             echo 'SwiftTrack Pipeline failed. Check the console output.'
         }
